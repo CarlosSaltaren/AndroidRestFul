@@ -20,13 +20,20 @@ class WebPageDashBoard < Sinatra::Application
 
   get '/messages' do #getting all the messages
     messageStructure = MessageHandler.new.get_messages
+
+    message_hash = Hash.new
     array_of_messages = Array.new
-    messageStructure.each do |key, value|
-      message_hash = Hash.new
-      message_hash = {:message => value.message, :id =>key , :expirydate => value.expiryDate }
+    if messageStructure.is_a?(String)
+      message_hash = {:message => messageStructure, :id =>'0' , :expirydate => Date.today() }
       array_of_messages << message_hash
+    else
+      messageStructure.each do |key, value|
+        message_hash = {:message => value.message, :id =>key , :expirydate => value.expiryDate }
+        array_of_messages << message_hash
+      end
     end
     body (array_of_messages.to_json)
+
 
   end
 
