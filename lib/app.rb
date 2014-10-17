@@ -32,8 +32,8 @@ class WebPageDashBoard < Sinatra::Application
         array_of_messages << message_hash
       end
     end
+    status(200)
     body (array_of_messages.to_json)
-
 
   end
 

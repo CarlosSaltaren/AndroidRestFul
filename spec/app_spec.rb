@@ -119,8 +119,8 @@ describe 'WebPageDashBoard' do
       it 'should return a default message if there is not any message' do
         get '/messages'
         parsed = (JSON.parse(last_response.body))
-        parsed.each do |key|
-            expect(key['message']).to eq 'Have a nice day'
+        parsed.each do |hashobj|
+            expect(hashobj['message']).to eq 'Have a nice day'
         end
 
 
