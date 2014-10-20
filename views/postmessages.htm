@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<script src="jquery-1.6.2.min.js"></script>
+<script src="jquery-ui-1.8.15.custom.min.js"></script>
+<link rel="stylesheet" href="jquery/jqueryCalendar.css">
+<head>
+    <script>
+        jQuery(function() {
+            jQuery( "#txtdate" ).datepicker();
+        });
+        function saveMessage()
+        {
+            var xmlhttp;
+
+            if (window.XMLHttpRequest)
+            {
+                xmlhttp=new XMLHttpRequest();
+
+            }
+            else
+            {
+                xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            xmlhttp.onreadystatechange=function()
+            {
+                var display = document.getElementById("divresponse");
+                var display_area = "";
+                display_area.innerHTML = "";
+
+                if (xmlhttp.readyState==4 && xmlhttp.status==200)
+                {
+                    var json = xmlhttp.responseText;
+                    display_area = "<table><tr><td>";
+                    alert("Id message ->" + json);
+                }
+            }
+
+
+            var txtmessage = document.getElementById("txtmessage").value;
+            var txtdate = document.getElementById("txtdate").value;
+            xmlhttp.open("POST","http://localhost:9292/messages",true);
+            xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xmlhttp.send(JSON.stringify({message_text:txtmessage, expiry_date:txtdate}));
+            xmlhttp.setRequestHeader("Connection", "close");
+        }
+    </script>
+</head>
+
+<body>
+
+<h2>Dashboard</h2>
+<fieldset><legend>Post Message</legend>
+    <div id="myDiv">
+        <table>
+            <tr>
+                <td>
+                    <label>Message</label>
+                </td>
+                <td>
+                    <textarea name="txtmessage" id="txtmessage" rows="5" cols="30" ></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Date</label>
+                </td>
+                <td>
+                    <input type="date" name="txtdate" id="txtdate"  >
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="button" name="Save" value="Save Message" onclick="saveMessage()">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="showmessages.htm">Dashboard</a> &nbsp;&nbsp;&nbsp;
+                    <a href="delete.htm">Delete</a>
+                </td>
+            </tr>
+
+        </table>
+
+
+    </div>
+
+    <div id="divresponse">
+    </div>
+</fieldset>
+</body>
+</html>

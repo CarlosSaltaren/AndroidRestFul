@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<script src="jquery-1.6.2.min.js"></script>
+<script src="jquery-ui-1.8.15.custom.min.js"></script>
+<link rel="stylesheet" href="jquery/jqueryCalendar.css">
+<head><title>delete message </title>
+    <script>
+        function showAllMessages()
+        {
+            var xmlhttp;
+            if (window.XMLHttpRequest)
+            {
+                xmlhttp=new XMLHttpRequest();
+            }
+            else
+            {// code for IE6, IE5
+                xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            xmlhttp.onreadystatechange=function()
+            {
+                var display = document.getElementById("myDiv");
+                var display_area = "<table border='1'><tr>  <th>Id</th> <th>Message display here</th> <th>Expire Date</th> </tr>";
+                display_area.innerHTML = "";
+
+                if (xmlhttp.readyState==4 && xmlhttp.status==200)
+                {
+                    var json = JSON.parse(xmlhttp.responseText);
+                    for(i = 0; i<json.length; i++){
+                        display_area += "<tr><td>";
+                        display_area +=  "	"+json[i].id;
+                        display_area += "</td><td>";
+                        display_area +=  "	"+json[i].message;
+                        display_area += "</td> <td>";
+                        display_area +=  "	"+json[i].expirydate;
+                        display_area += "</td> <td>";
+                        display_area +=  "<input type='button' value='Delete' onclick='deleteMessage(\"" + json[i].id + "\")' />";
+                        display_area += "</td> </tr>";
+                    }
+                    display_area += "</table>";
+
+                    display_area += "<br/> <a href='showmessages.htm'>Dashboard</a> ";
+
+                    display.innerHTML = display_area;
+
+                }
+            }
+            xmlhttp.open("GET","http://localhost:9292/messages",true);
+            xmlhttp.send();
+        }
+        function deleteMessage(id)
+        {
+
+            var xmlhttp;
+
+            if (window.XMLHttpRequest)
+            {
+                xmlhttp=new XMLHttpRequest();
+
+            }
+            else
+            {
+                xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            xmlhttp.onreadystatechange=function()
+            {
+                var display = document.getElementById("divresponse");
+                var display_area = "";
+                display_area.innerHTML = "";
+
+                if (xmlhttp.readyState==4 && xmlhttp.status==200)
+                {
+                    location.reload(true);
+
+                }
+            }
+            xmlhttp.open("DELETE","http://localhost:9292/messages?idmessage="+id,true);
+            xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xmlhttp.send();
+            xmlhttp.setRequestHeader("Connection", "close");
+        }
+    </script>
+</head>
+<body onload="showAllMessages()">
+<h2>Dashboard</h2>
+<fieldset ><legend>Delete Messages</legend>
+
+    <div id="myDiv">
+
+
+    </div>
+
+    <div id="divresponse">
+    </div>
+</fieldset>
+</body>
+</html>
