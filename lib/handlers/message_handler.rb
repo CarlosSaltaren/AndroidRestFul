@@ -14,6 +14,27 @@ class MessageHandler
     @output = 'Have a nice day'
   end
 
+
+
+  def get_messagesBirthday
+    if get_number_of_message <= 0
+      @output
+    else
+      allmessages = MessageRepository.new.get_messages
+      allmessages.each do |key, value|
+        if !value.expiryDate.nil? && !value.expiryDate.nil?
+          if value.expiryDate < Date.today
+            allmessages.delete(key)
+          end
+        end
+      end
+      allmessages
+    end
+  end
+
+
+
+
   def get_message
     if MessageRepository.message.nil? || MessageRepository.message.empty?
       @output
